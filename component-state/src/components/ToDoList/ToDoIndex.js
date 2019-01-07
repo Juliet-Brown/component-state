@@ -1,29 +1,36 @@
 import React, { Component } from "react";
 import List from "./List";
 
-class TodoList extends Component {
+class ComponentState extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "Juliet",
-      term: "",
+      name: "Component state example",
+      list: "",
       items: [],
       clicks: 0,
       show: true,
+      showImage: true,
+      showListItem: true,
       term: "",
       img: ""
     };
   }
 
+  onChangeList = event => {
+    this.setState({ list: event.target.value });
+  };
+
   onChange = event => {
+    console.log("event", event);
     this.setState({ term: event.target.value });
   };
 
   onSubmit = event => {
     event.preventDefault();
     this.setState({
-      term: "",
-      items: [...this.state.items, this.state.term]
+      list: "",
+      items: [...this.state.items, this.state.list]
     });
   };
 
@@ -49,26 +56,50 @@ class TodoList extends Component {
     this.setState({ clicks: this.state.clicks - 1 });
   };
 
-  ToggleClick = () => {
+  hideNumber = () => {
     this.setState({ show: !this.state.show });
+  };
+
+  hideListItem = () => {
+    this.setState({ showListItem: !this.state.showListItem });
+  };
+
+  hideListImage = () => {
+    this.setState({ showImage: !this.state.showImage });
   };
 
   render() {
     return (
       <div>
+        <h1> {this.state.name}!</h1>
+
         <form className="App" onSubmit={this.onSubmit}>
-          <input value={this.state.term} onChange={this.onChange} />
+          <input value={this.state.list} onChange={this.onChangeList} />
           <button>Submit</button>
+          <button onClick={this.hideListItem}>
+            {this.state.showListItem ? "Hide List" : "Show List "}
+          </button>
+          {this.state.showListItem ? <List items={this.state.items} /> : ""}
         </form>
+
         <form onSubmit={this.handleSubmit}>
           <input value={this.state.term} onChange={this.onChange} />
           <button>Search!</button>
+
+          <button onClick={this.hideListImage}>
+            {this.state.showImage ? "Hide Image" : "Show Image"}
+          </button>
         </form>
-        <img src={this.state.img} height="200" alt={this.state.term} />
-        <List items={this.state.items} />
+
+        {this.state.showImage ? (
+          <img src={this.state.img} height="200" alt={this.state.term} />
+        ) : (
+          ""
+        )}
+
         <button onClick={this.IncrementItem}>Click to increment by 1</button>
         <button onClick={this.DecreaseItem}>Click to decrease by 1</button>
-        <button onClick={this.ToggleClick}>
+        <button onClick={this.hideNumber}>
           {this.state.show ? "Hide number" : "Show number"}
         </button>
         {this.state.show ? <h2>{this.state.clicks}</h2> : ""}
@@ -76,4 +107,4 @@ class TodoList extends Component {
     );
   }
 }
-export default TodoList;
+export default ComponentState;
